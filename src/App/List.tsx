@@ -69,8 +69,8 @@ const Content = (props: Props) => {
   const getStyleOptions = () => {
     const allStyles = new Set<string>();
     props.data.forEach((item: any) => {
-      if (item['Style']) {
-        item['Style'].split(',').forEach((s: string) => allStyles.add(s.trim()));
+      if (item['スタイル']) {
+        item['スタイル'].split(',').forEach((s: string) => allStyles.add(s.trim()));
       }
     });
     return Array.from(allStyles).map(v => ({ value: v, label: v }));
@@ -84,8 +84,8 @@ const Content = (props: Props) => {
   const getOptionOptions = () => {
     const all = new Set<string>();
     props.data.forEach((item: any) => {
-      if (item['Option']) {
-        item['Option'].split(',').forEach((o: string) => all.add(o.trim()));
+      if (item['オプション']) {
+        item['オプション'].split(',').forEach((o: string) => all.add(o.trim()));
       }
     });
     return Array.from(all).map(v => ({ value: v, label: v }));
@@ -152,20 +152,20 @@ const Content = (props: Props) => {
     setPage(page + 10);
   }
 
-  const loader = <div className="loader" key={0} style={{ padding: '20px', textAlign: 'center' }}>Loading...</div>;
+  const loader = <div className="loader" key={0} style={{ padding: '20px', textAlign: 'center' }}>読み込み中です...</div>;
 
   return (
     <div id="shop-list" className="shop-list">
       {/* 検索窓セクション */}
       <div style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: '8px', borderBottom: '1px solid #eee', background: '#fff' }}>
 
-        {/* ① Category + Vegan Level */}
+        {/* ① カテゴリ + レベル */}
         <div style={{ display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1 }}>
             <Select 
-              placeholder="Category"
+              placeholder="カテゴリ"
               isClearable 
-              options={getOptions('Category')} 
+              options={getOptions('カテゴリ')} 
               onChange={setCategory} 
               styles={selectStyles}
               isSearchable={false}
@@ -173,9 +173,9 @@ const Content = (props: Props) => {
           </div>
           <div style={{ flex: 1 }}>
             <Select 
-              placeholder="Vegan Level"
+              placeholder="ヴィーガンレベル"
               isClearable 
-              options={getOptions('Vegan Level')} 
+              options={getOptions('ヴィーガンレベル')} 
               onChange={setLevel} 
               styles={selectStyles}
               isSearchable={false}
@@ -183,13 +183,13 @@ const Content = (props: Props) => {
           </div>
         </div>
 
-        {/* ② Option + Style */}
+        {/* ② スタイル + オプション（左にスタイル、右にオプション） */}
         <div style={{ display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1 }}>
             <Select 
-              placeholder="Option"
-              options={getOptionOptions()}
-              onChange={setOption}
+              placeholder="スタイル"
+              options={getStyleOptions()} 
+              onChange={setStyle}
               styles={selectStyles}
               isClearable
               isSearchable={false}
@@ -198,9 +198,9 @@ const Content = (props: Props) => {
 
           <div style={{ flex: 1 }}>
             <Select 
-              placeholder="Style"
-              options={getStyleOptions()} 
-              onChange={setStyle}
+              placeholder="オプション"
+              options={getOptionOptions()}
+              onChange={setOption}
               styles={selectStyles}
               isClearable
               isSearchable={false}
@@ -210,7 +210,7 @@ const Content = (props: Props) => {
 
         {/* 件数 */}
         <div style={{ fontSize: '10px', color: '#999', marginTop: '4px' }}>
-          {data.length} results
+          該当件数: {data.length} 件
         </div>
 
       </div>
