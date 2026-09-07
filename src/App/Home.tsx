@@ -30,23 +30,23 @@ const Content = (props: Props) => {
   // ▼ 選択肢生成
   // =============================
 
-  // スタイル（カンマ分割）
+  // Style（カンマ分割）
   const getStyleOptions = () => {
     const all = new Set<string>();
     props.data.forEach((item: any) => {
-      if (item['スタイル']) {
-        item['スタイル'].split(',').forEach((s: string) => all.add(s.trim()));
+      if (item['Style']) {
+        item['Style'].split(',').forEach((s: string) => all.add(s.trim()));
       }
     });
     return Array.from(all).map(v => ({ value: v, label: v }));
   };
 
-  // オプション（カンマ分割）
+  // Option（カンマ分割）
   const getOptionOptions = () => {
     const all = new Set<string>();
     props.data.forEach((item: any) => {
-      if (item['オプション']) {
-        item['オプション'].split(',').forEach((o: string) => all.add(o.trim()));
+      if (item['Option']) {
+        item['Option'].split(',').forEach((o: string) => all.add(o.trim()));
       }
     });
     return Array.from(all).map(v => ({ value: v, label: v }));
@@ -79,13 +79,13 @@ const Content = (props: Props) => {
         gap: '8px'
       }}>
 
-        {/* ① カテゴリ + レベル */}
+        {/* ① Category + Vegan Level */}
         <div style={{ display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="カテゴリ"
+              placeholder="Category"
               isClearable
-              options={getOptions('カテゴリ')}
+              options={getOptions('Category')}
               onChange={setCategory}
               styles={selectStyles}
               isSearchable={false}
@@ -94,9 +94,9 @@ const Content = (props: Props) => {
 
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="ヴィーガンレベル"
+              placeholder="Vegan Level"
               isClearable
-              options={getOptions('ヴィーガンレベル')}
+              options={getOptions('Vegan Level')}
               onChange={setLevel}
               styles={selectStyles}
               isSearchable={false}
@@ -104,11 +104,11 @@ const Content = (props: Props) => {
           </div>
         </div>
 
-        {/* ② スタイル + オプション */}
+        {/* ② Style + Option */}
         <div style={{ display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="スタイル"
+              placeholder="Style"
               isClearable
               options={getStyleOptions()}
               onChange={setStyle}
@@ -119,7 +119,7 @@ const Content = (props: Props) => {
 
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="オプション"
+              placeholder="Option"
               isClearable
               options={getOptionOptions()}
               onChange={setOption}
