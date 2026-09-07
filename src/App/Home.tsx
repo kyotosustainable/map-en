@@ -9,13 +9,11 @@ type Props = {
 }
 
 const Content = (props: Props) => {
-  // ✅ 全て単一選択に統一
+  // ✅ 4項目に統一
   const [category, setCategory] = React.useState<any>(null);
   const [level, setLevel] = React.useState<any>(null);
   const [style, setStyle] = React.useState<any>(null);
   const [option, setOption] = React.useState<any>(null);
-  const [time, setTime] = React.useState<any>(null);
-  const [price, setPrice] = React.useState<any>(null);
 
   // ✅ 共通フィルター関数
   const filteredData = filterShops(props.data, {
@@ -23,8 +21,6 @@ const Content = (props: Props) => {
     level,
     style,
     option,
-    time,
-    price,
     queryCategory: null,
     queryLevel: null,
     queryStyle: null
@@ -125,44 +121,8 @@ const Content = (props: Props) => {
             <Select
               placeholder="オプション"
               isClearable
-              options={getOptionOptions()} // ←ここ重要
+              options={getOptionOptions()}
               onChange={setOption}
-              styles={selectStyles}
-              isSearchable={false}
-            />
-          </div>
-        </div>
-
-        {/* ③ 時間 + 価格 */}
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <div style={{ flex: 1 }}>
-            <Select
-              placeholder="営業時間帯"
-              isClearable
-              options={[
-                { value: 'モーニング', label: 'モーニング' },
-                { value: 'ランチ', label: 'ランチ' },
-                { value: 'ディナー', label: 'ディナー' },
-                { value: 'カフェタイム', label: 'カフェタイム' },
-              ]}
-              onChange={setTime}
-              styles={selectStyles}
-              isSearchable={false}
-            />
-          </div>
-
-          <div style={{ flex: 1 }}>
-            <Select
-              placeholder="価格帯"
-              isClearable
-              options={[
-                { value: '¥', label: '¥' },
-                { value: '¥¥', label: '¥¥' },
-                { value: '¥¥¥', label: '¥¥¥' },
-                { value: '¥¥¥¥', label: '¥¥¥¥' },
-                { value: '¥¥¥¥¥', label: '¥¥¥¥¥' },
-              ]}
-              onChange={setPrice}
               styles={selectStyles}
               isSearchable={false}
             />
