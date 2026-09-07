@@ -5,8 +5,6 @@ export const filterShops = (
     level,
     style,
     option,
-    time,
-    price,
     queryCategory,
     queryLevel,
     queryStyle
@@ -25,12 +23,6 @@ export const filterShops = (
     const matchOpt = !option ||
       (item['オプション'] || '').includes(option.value);
 
-    const matchTime = !time ||
-      (item['営業時間帯'] || '').includes(time.value);
-
-    const matchPrice = !price ||
-      item['価格帯'] === price.value;
-
-    return matchCat && matchLvl && matchStl && matchOpt && matchTime && matchPrice;
+    return matchCat && matchLvl && matchStl && matchOpt;
   });
 };
