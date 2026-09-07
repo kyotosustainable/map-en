@@ -52,13 +52,11 @@ const Content = (props: Props) => {
   const [page, setPage] = React.useState(10);
   const [hasMore, setHasMore] = React.useState(true);
 
-  // 絞り込み用の状態
+  // 絞り込み用の状態（4項目）
   const [category, setCategory] = React.useState<any>(null);
   const [level, setLevel] = React.useState<any>(null);
   const [style, setStyle] = React.useState<any>(null);
   const [option, setOption] = React.useState<any>(null);
-  const [time, setTime] = React.useState<any>(null);
-  const [price, setPrice] = React.useState<any>(null);
   
   const [searchParams] = useSearchParams();
   
@@ -93,35 +91,18 @@ const Content = (props: Props) => {
     return Array.from(all).map(v => ({ value: v, label: v }));
   };
 
-  const getTimeOptions = () => [
-    { value: 'モーニング', label: 'モーニング' },
-    { value: 'ランチ', label: 'ランチ' },
-    { value: 'ディナー', label: 'ディナー' },
-    { value: 'カフェタイム', label: 'カフェタイム' },
-  ];
-
-  const getPriceOptions = () => [
-    { value: '¥', label: '¥' },
-    { value: '¥¥', label: '¥¥' },
-    { value: '¥¥¥', label: '¥¥¥' },
-    { value: '¥¥¥¥', label: '¥¥¥¥' },
-    { value: '¥¥¥¥¥', label: '¥¥¥¥¥' },
-  ];
-
   // フィルタリングとソートの実行
-React.useEffect(() => {
-  let filtered = filterShops(props.data, {
-  category,
-  level,
-  style,
-  option,
-  time,
-  price,
-  queryCategory,
-  queryLevel,
-  queryStyle
-});
-  
+  React.useEffect(() => {
+    let filtered = filterShops(props.data, {
+      category,
+      level,
+      style,
+      option,
+      queryCategory,
+      queryLevel,
+      queryStyle
+    });
+    
     let isMounted = true
     const orderBy = process.env.REACT_APP_ORDERBY
 
@@ -143,17 +124,15 @@ React.useEffect(() => {
 
     return () => { isMounted = false }
   }, [
-  props.data,
-  category,
-  level,
-  style,
-  option,
-  time,
-  price,
-  queryCategory,
-  queryLevel,
-  queryStyle
-])
+    props.data,
+    category,
+    level,
+    style,
+    option,
+    queryCategory,
+    queryLevel,
+    queryStyle
+  ])
 
   const popupHandler = (shop: any) => {
     if (shop['公式サイト'] && String(shop['公式サイト']).startsWith('http')) {
@@ -180,86 +159,61 @@ React.useEffect(() => {
       {/* 検索窓セクション */}
       <div style={{ padding: '15px', display: 'flex', flexDirection: 'column', gap: '8px', borderBottom: '1px solid #eee', background: '#fff' }}>
 
-  {/* ① カテゴリ + レベル */}
-  <div style={{ display: 'flex', gap: '8px' }}>
-    <div style={{ flex: 1 }}>
-      <Select 
-        placeholder="カテゴリ"
-        isClearable 
-        options={getOptions('カテゴリ')} 
-        onChange={setCategory} 
-        styles={selectStyles}
-        isSearchable={false}
-      />
-    </div>
-    <div style={{ flex: 1 }}>
-      <Select 
-        placeholder="ヴィーガンレベル"
-        isClearable 
-        options={getOptions('ヴィーガンレベル')} 
-        onChange={setLevel} 
-        styles={selectStyles}
-        isSearchable={false}
-      />
-    </div>
-  </div>
+        {/* ① カテゴリ + レベル */}
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ flex: 1 }}>
+            <Select 
+              placeholder="カテゴリ"
+              isClearable 
+              options={getOptions('カテゴリ')} 
+              onChange={setCategory} 
+              styles={selectStyles}
+              isSearchable={false}
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <Select 
+              placeholder="ヴィーガンレベル"
+              isClearable 
+              options={getOptions('ヴィーガンレベル')} 
+              onChange={setLevel} 
+              styles={selectStyles}
+              isSearchable={false}
+            />
+          </div>
+        </div>
 
-  {/* ② オプション + スタイル（←ここが今回のポイント） */}
-  <div style={{ display: 'flex', gap: '8px' }}>
-    <div style={{ flex: 1 }}>
-      <Select 
-        placeholder="オプション"
-        options={getOptionOptions()}
-        onChange={setOption}
-        styles={selectStyles}
-        isClearable
-        isSearchable={false}
-      />
-    </div>
+        {/* ② オプション + スタイル */}
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ flex: 1 }}>
+            <Select 
+              placeholder="オプション"
+              options={getOptionOptions()}
+              onChange={setOption}
+              styles={selectStyles}
+              isClearable
+              isSearchable={false}
+            />
+          </div>
 
-    <div style={{ flex: 1 }}>
-      <Select 
-        placeholder="スタイル"
-        options={getStyleOptions()} 
-        onChange={setStyle}
-        styles={selectStyles}
-        isClearable
-        isSearchable={false}
-      />
-    </div>
-  </div>
+          <div style={{ flex: 1 }}>
+            <Select 
+              placeholder="スタイル"
+              options={getStyleOptions()} 
+              onChange={setStyle}
+              styles={selectStyles}
+              isClearable
+              isSearchable={false}
+            />
+          </div>
+        </div>
 
-  {/* ③ 営業時間帯 + 価格帯 */}
-  <div style={{ display: 'flex', gap: '8px' }}>
-    <div style={{ flex: 1 }}>
-      <Select
-        placeholder="営業時間帯"
-        options={getTimeOptions()}
-        onChange={setTime}
-        styles={selectStyles}
-        isClearable
-        isSearchable={false}
-      />
-    </div>
+        {/* 件数 */}
+        <div style={{ fontSize: '10px', color: '#999', marginTop: '4px' }}>
+          該当件数: {data.length} 件
+        </div>
 
-    <div style={{ flex: 1 }}>
-      <Select
-        placeholder="価格帯"
-        options={getPriceOptions()}
-        onChange={setPrice}
-        styles={selectStyles}
-        isClearable
-        isSearchable={false}
-      />
-    </div>
-  </div>
-
-  {/* 件数 */}
-  <div style={{ fontSize: '10px', color: '#999', marginTop: '4px' }}>
-    該当件数: {data.length} 件
-  </div>
-
-</div>
+      </div>
 
       <InfiniteScroll
         dataLength={list.length}
