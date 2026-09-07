@@ -94,7 +94,7 @@ const Content = (props: Props) => {
         },
         layout: {
           // 店舗名カラム（スプレッドシートのヘッダー名が Name の場合）
-          'text-field': "{Name}",
+          'text-field': "{Spot Name}",
           'text-font': ['Noto Sans Regular'],
           'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
           'text-radial-offset': 0.5,
