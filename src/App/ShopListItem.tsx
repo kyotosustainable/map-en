@@ -22,8 +22,8 @@ const ShopListItem = (props: Props) => {
 
       {/* 右側：コンテンツエリア */}
       <div className="item-content">
-        <div className="item-category-tag">{data['Category']}</div>
-        <h3 className="item-title">{data['Spot Name']}</h3>
+        <div className="item-category-tag">{data['カテゴリ']}</div>
+        <h3 className="item-title">{data['スポット名']}</h3>
         {/* スプレッドシートに日付列などがあればここに追加できます */}
         <p className="item-date">{data['タイムスタンプ']?.split(' ')[0]}</p>
       </div>
