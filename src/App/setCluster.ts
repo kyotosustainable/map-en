@@ -20,7 +20,8 @@ const setCluster = (map: any) => {
       'text-color': '#FFFFFF',
     },
     layout: {
-      'text-field': '{point_count_abbreviated} 件',
+      // 「 件」を削除して数字のみを表示
+      'text-field': '{point_count_abbreviated}',
       'text-size': 12,
       'text-font': ['Noto Sans Regular'],
     },
