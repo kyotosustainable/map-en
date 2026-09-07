@@ -16,7 +16,6 @@ const CSS: React.CSSProperties = {
 }
 
 const hidePoiLayers = (map: any) => {
-
   const hideLayers = [
     'poi',
     'poi-primary',
@@ -39,13 +38,11 @@ const Content = (props: Props) => {
   const [shop, setShop] = React.useState<Pwamap.ShopData | undefined>(undefined)
 
   const addMarkers = (mapObject: any, data: any) => {
-
     if (!mapObject || data.length === 0) {
       return
     }
 
     mapObject.on('render', () => {
-
       // nothing to do if shops exists.
       if (mapObject.getSource('shops')) {
         return
@@ -96,7 +93,8 @@ const Content = (props: Props) => {
           'text-halo-width': 2,
         },
         layout: {
-          'text-field': "{スポット名}",
+          // 店舗名カラム（スプレッドシートのヘッダー名が Name の場合）
+          'text-field': "{Name}",
           'text-font': ['Noto Sans Regular'],
           'text-variable-anchor': ['top', 'bottom', 'left', 'right'],
           'text-radial-offset': 0.5,
@@ -124,48 +122,40 @@ const Content = (props: Props) => {
         mapObject.getCanvas().style.cursor = ''
       })
 
-      // Map.tsx 内の click イベント部分を修正
+      mapObject.on('click', 'shop-points', (event: any) => {
+        const properties = event.features[0].properties;
+        const websiteUrl = properties['Website'] || properties['公式サイト'];
+        if (websiteUrl && String(websiteUrl).startsWith('http')) {
+          window.open(websiteUrl, '_blank', 'noreferrer');
+        } else if (!properties.cluster) {
+          setShop(properties);
+        }
+      });
 
-// --- ここから入れ替え ---
-    mapObject.on('click', 'shop-points', (event: any) => {
-      const properties = event.features[0].properties;
-      // 「公式サイト」のURLがある場合は別タブで開く
-      if (properties['公式サイト'] && String(properties['公式サイト']).startsWith('http')) {
-        window.open(properties['公式サイト'], '_blank', 'noreferrer');
-      } else if (!properties.cluster) {
-        setShop(properties);
-      }
+      mapObject.on('click', 'shop-symbol', (event: any) => {
+        const properties = event.features[0].properties;
+        const websiteUrl = properties['Website'] || properties['公式サイト'];
+        if (websiteUrl && String(websiteUrl).startsWith('http')) {
+          window.open(websiteUrl, '_blank', 'noreferrer');
+        } else if (!properties.cluster) {
+          setShop(properties);
+        }
+      });
+
+      setCluster(mapObject);
     });
+  };
 
-    mapObject.on('click', 'shop-symbol', (event: any) => {
-      const properties = event.features[0].properties;
-      // 「公式サイト」のURLがある場合は別タブで開く
-      if (properties['公式サイト'] && String(properties['公式サイト']).startsWith('http')) {
-        window.open(properties['公式サイト'], '_blank', 'noreferrer');
-      } else if (!properties.cluster) {
-        setShop(properties);
-      }
-    });
+  React.useEffect(() => {
+    if (!mapObject) return;
 
-    setCluster(mapObject);
-  }); // <--- ここが addMarkers 内の mapObject.on('render', ...) の閉じ
-}; // <--- ここが addMarkers 関数の閉じ
-// --- ここまで入れ替え ---
-
-  // Map.tsx 内の該当箇所を修正
-
-React.useEffect(() => {
-  if (!mapObject) return;
-
-  const source = mapObject.getSource('shops') as any;
-  if (source) {
-    // データが変更されたら、地図のソース（GeoJSON）を差し替える
-    source.setData(toGeoJson(props.data));
-  } else {
-    // 最初の読み込み時
-    addMarkers(mapObject, props.data);
-  }
-}, [props.data, mapObject]); // props.data（絞り込み後のデータ）が変わるたびに実行
+    const source = mapObject.getSource('shops') as any;
+    if (source) {
+      source.setData(toGeoJson(props.data));
+    } else {
+      addMarkers(mapObject, props.data);
+    }
+  }, [props.data, mapObject]);
 
   React.useEffect(() => {
     if (!mapObject || props.data.length === 0) {
@@ -182,7 +172,6 @@ React.useEffect(() => {
   }, [mapObject, props.data])
 
   React.useEffect(() => {
-    // Only once reder the map.
     if (!mapNode.current || mapObject) {
       return
     }
@@ -193,9 +182,9 @@ React.useEffect(() => {
     const map = new geolonia.Map({
       container: mapNode.current,
       style: 'geolonia/notebook',
+      lang: 'en',
     });
 
-    // 👇 ここを追加
     map.on('load', () => {
       map.setPaintProperty('water', 'fill-color', '#A5DEE4')
     })
@@ -209,13 +198,11 @@ React.useEffect(() => {
       map.resize()
     }
 
-    // attach
     map.on('load', onMapLoad)
 
     window.addEventListener('orientationchange', orienteationchangeHandler)
 
     return () => {
-      // detach to prevent memory leak
       window.removeEventListener('orientationchange', orienteationchangeHandler)
       map.off('load', onMapLoad)
     }
@@ -230,6 +217,7 @@ React.useEffect(() => {
       <div
         ref={mapNode}
         style={CSS}
+        data-lang="en"
         data-geolocate-control="on"
         data-marker="off"
         data-gesture-handling="off"
