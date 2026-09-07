@@ -14,14 +14,14 @@ export const filterShops = (
     const targetCat = category ? category.value : queryCategory;
     const targetLvl = level ? level.value : queryLevel;
 
-    const matchCat = !targetCat || item['カテゴリ'] === targetCat;
-    const matchLvl = !targetLvl || item['ヴィーガンレベル'] === targetLvl;
+    const matchCat = !targetCat || item['Category'] === targetCat;
+    const matchLvl = !targetLvl || item['Vegan Level'] === targetLvl;
 
     const matchStl = !style ||
-      (item['スタイル'] || '').includes(style.value);
+      (item['Style'] || '').includes(style.value);
 
     const matchOpt = !option ||
-      (item['オプション'] || '').includes(option.value);
+      (item['Option'] || '').includes(option.value);
 
     return matchCat && matchLvl && matchStl && matchOpt;
   });
