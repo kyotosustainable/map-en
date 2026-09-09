@@ -14,14 +14,18 @@ export const filterShops = (
     const targetCat = category ? category.value : queryCategory;
     const targetLvl = level ? level.value : queryLevel;
 
-    const matchCat = !targetCat || item['Category'] === targetCat;
-    const matchLvl = !targetLvl || item['Vegan Level'] === targetLvl;
+    // 【修正】カンマ区切りの中に targetCat が含まれているかを判定
+    const rawCat = item['カテゴリ'] || item['Category'] || '';
+    const shopCategories = rawCat.split(/[,、]/).map((c: string) => c.trim());
+    const matchCat = !targetCat || shopCategories.includes(targetCat);
+
+    const matchLvl = !targetLvl || item['ヴィーガンレベル'] === targetLvl;
 
     const matchStl = !style ||
-      (item['Style'] || '').includes(style.value);
+      (item['スタイル'] || '').includes(style.value);
 
     const matchOpt = !option ||
-      (item['Option'] || '').includes(option.value);
+      (item['オプション'] || '').includes(option.value);
 
     return matchCat && matchLvl && matchStl && matchOpt;
   });
