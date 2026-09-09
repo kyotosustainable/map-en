@@ -13,19 +13,27 @@ export const filterShops = (
   return data.filter((item: any) => {
     const targetCat = category ? category.value : queryCategory;
     const targetLvl = level ? level.value : queryLevel;
+    const targetStl = style ? style.value : queryStyle;
+    const targetOpt = option ? option.value : null;
 
-    // 【修正】カンマ区切りの中に targetCat が含まれているかを判定
-    const rawCat = item['カテゴリ'] || item['Category'] || '';
-    const shopCategories = rawCat.split(/[,、]/).map((c: string) => c.trim());
+    // K列: Category（カンマ区切り対応）
+    const rawCat = (item['Category'] || '').trim();
+    const shopCategories = rawCat.split(/[,、]/).map((c: string) => c.trim()).filter(Boolean);
     const matchCat = !targetCat || shopCategories.includes(targetCat);
 
-    const matchLvl = !targetLvl || item['ヴィーガンレベル'] === targetLvl;
+    // L列: Vegan Level（完全一致）
+    const itemLvl = (item['Vegan Level'] || '').trim();
+    const matchLvl = !targetLvl || itemLvl === targetLvl;
 
-    const matchStl = !style ||
-      (item['スタイル'] || '').includes(style.value);
+    // M列: Style（カンマ区切り対応）
+    const rawStyle = (item['Style'] || '').trim();
+    const shopStyles = rawStyle.split(/[,、]/).map((s: string) => s.trim()).filter(Boolean);
+    const matchStl = !targetStl || shopStyles.includes(targetStl);
 
-    const matchOpt = !option ||
-      (item['オプション'] || '').includes(option.value);
+    // N列: Options（カンマ区切り対応）
+    const rawOpt = (item['Options'] || '').trim();
+    const shopOptions = rawOpt.split(/[,、]/).map((o: string) => o.trim()).filter(Boolean);
+    const matchOpt = !targetOpt || shopOptions.includes(targetOpt);
 
     return matchCat && matchLvl && matchStl && matchOpt;
   });
