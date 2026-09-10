@@ -9,13 +9,13 @@ type Props = {
 }
 
 const Content = (props: Props) => {
-  // ✅ 4項目に統一
+  // 4項目のステート
   const [category, setCategory] = React.useState<any>(null);
   const [level, setLevel] = React.useState<any>(null);
   const [style, setStyle] = React.useState<any>(null);
   const [option, setOption] = React.useState<any>(null);
 
-  // ✅ 共通フィルター関数
+  // 共通フィルター関数（英語カラム判定対応）
   const filteredData = filterShops(props.data, {
     category,
     level,
@@ -27,14 +27,14 @@ const Content = (props: Props) => {
   });
 
   // =============================
-  // ▼ 選択肢生成
+  // ▼ 英語選択肢の生成
   // =============================
 
-  // 【追加】カテゴリ（カンマ・読点分割）
+  // K列: Category（カンマ分割）
   const getCategoryOptions = () => {
     const all = new Set<string>();
     props.data.forEach((item: any) => {
-      const raw = item['カテゴリ'] || item['Category'];
+      const raw = (item['Category'] || '').trim();
       if (raw) {
         raw.split(/[,、]/).forEach((c: string) => {
           const trimmed = c.trim();
@@ -45,34 +45,42 @@ const Content = (props: Props) => {
     return Array.from(all).map(v => ({ value: v, label: v }));
   };
 
-  // スタイル（カンマ分割）
+  // L列: Vegan Level（単一値）
+  const getLevelOptions = () => {
+    const uniqueValues = Array.from(
+      new Set(props.data.map((item: any) => (item['Vegan Level'] || '').trim()).filter(Boolean))
+    );
+    return uniqueValues.map(v => ({ value: v, label: v }));
+  };
+
+  // M列: Style（カンマ分割）
   const getStyleOptions = () => {
     const all = new Set<string>();
     props.data.forEach((item: any) => {
-      if (item['スタイル']) {
-        item['スタイル'].split(/[,、]/).forEach((s: string) => all.add(s.trim()));
+      const raw = (item['Style'] || '').trim();
+      if (raw) {
+        raw.split(/[,、]/).forEach((s: string) => {
+          const trimmed = s.trim();
+          if (trimmed) all.add(trimmed);
+        });
       }
     });
     return Array.from(all).map(v => ({ value: v, label: v }));
   };
 
-  // オプション（カンマ分割）
+  // N列: Options（カンマ分割）
   const getOptionOptions = () => {
     const all = new Set<string>();
     props.data.forEach((item: any) => {
-      if (item['オプション']) {
-        item['オプション'].split(/[,、]/).forEach((o: string) => all.add(o.trim()));
+      const raw = (item['Options'] || '').trim();
+      if (raw) {
+        raw.split(/[,、]/).forEach((o: string) => {
+          const trimmed = o.trim();
+          if (trimmed) all.add(trimmed);
+        });
       }
     });
     return Array.from(all).map(v => ({ value: v, label: v }));
-  };
-
-  // 単一値系（ヴィーガンレベルなど）
-  const getOptions = (key: string) => {
-    const uniqueValues = Array.from(
-      new Set(props.data.map((item: any) => item[key]).filter(Boolean))
-    );
-    return uniqueValues.map(v => ({ value: v, label: v }));
   };
 
   // =============================
@@ -94,13 +102,13 @@ const Content = (props: Props) => {
         gap: '8px'
       }}>
 
-        {/* ① カテゴリ + レベル */}
+        {/* ① Category + Vegan Level */}
         <div style={{ display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="カテゴリ"
+              placeholder="Category"
               isClearable
-              options={getCategoryOptions()} // ← ここを getCategoryOptions() に変更
+              options={getCategoryOptions()}
               onChange={setCategory}
               styles={selectStyles}
               isSearchable={false}
@@ -109,9 +117,9 @@ const Content = (props: Props) => {
 
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="ヴィーガンレベル"
+              placeholder="Vegan Level"
               isClearable
-              options={getOptions('ヴィーガンレベル')}
+              options={getLevelOptions()}
               onChange={setLevel}
               styles={selectStyles}
               isSearchable={false}
@@ -119,11 +127,11 @@ const Content = (props: Props) => {
           </div>
         </div>
 
-        {/* ② スタイル + オプション */}
+        {/* ② Style + Options */}
         <div style={{ display: 'flex', gap: '8px' }}>
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="スタイル"
+              placeholder="Style"
               isClearable
               options={getStyleOptions()}
               onChange={setStyle}
@@ -134,7 +142,7 @@ const Content = (props: Props) => {
 
           <div style={{ flex: 1 }}>
             <Select
-              placeholder="オプション"
+              placeholder="Options"
               isClearable
               options={getOptionOptions()}
               onChange={setOption}
@@ -146,7 +154,7 @@ const Content = (props: Props) => {
 
       </div>
 
-      {/* マップ */}
+      {/* マップ描画 */}
       <Map data={filteredData} />
     </div>
   );
