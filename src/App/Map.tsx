@@ -124,7 +124,7 @@ const Content = (props: Props) => {
 
       mapObject.on('click', 'shop-points', (event: any) => {
         const properties = event.features[0].properties;
-        const websiteUrl = properties['Website'] || properties['公式サイト'];
+        const websiteUrl = properties['Website'] || properties['英語サイト'];
         if (websiteUrl && String(websiteUrl).startsWith('http')) {
           window.open(websiteUrl, '_blank', 'noreferrer');
         } else if (!properties.cluster) {
@@ -134,7 +134,7 @@ const Content = (props: Props) => {
 
       mapObject.on('click', 'shop-symbol', (event: any) => {
         const properties = event.features[0].properties;
-        const websiteUrl = properties['Website'] || properties['公式サイト'];
+        const websiteUrl = properties['Website'] || properties['英語サイト'];
         if (websiteUrl && String(websiteUrl).startsWith('http')) {
           window.open(websiteUrl, '_blank', 'noreferrer');
         } else if (!properties.cluster) {
